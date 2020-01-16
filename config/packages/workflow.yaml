@@ -1,0 +1,26 @@
+framework:
+    workflows:
+        validate_article:
+            type: 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: method
+                property: 'state'
+            supports:
+                - App\Entity\Article
+            places:
+                - create
+                - review
+                - publish
+            initial_marking: create
+            transitions:
+                submit:
+                    from: create
+                    to: review
+                published:
+                    from: review
+                    to: publish
+                unpublished:
+                    from: publish
+                    to: review

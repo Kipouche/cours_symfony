@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraint as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
@@ -19,6 +20,14 @@ class Category
     private $id;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min = 2,
+     *     max = 50
+     * )
+     * @Assert\Regex(
+     *     pattern="/^[A-z0-9À-ÿ\s\-,']*$/"
+     * )
      * @ORM\Column(type="string", length=50)
      */
     private $name;

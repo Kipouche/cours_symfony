@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
@@ -17,11 +18,23 @@ class Article
     private $id;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min = 2,
+     *     max = 50
+     * )
+     * @Assert\Regex(
+     *     pattern="/^[A-z0-9À-ÿ\s\-,':\.]*$/"
+     * )
      * @ORM\Column(type="string", length=50)
      */
     private $title;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/^[A-z0-9À-ÿ\s\-,':\.]*$/"
+     * )
      * @ORM\Column(type="text")
      */
     private $content;
@@ -36,6 +49,17 @@ class Article
      * @ORM\JoinColumn(nullable=false)
      */
     private $author;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $state;
+
+    public function __construct()
+    {
+        $this->state = "create";
+    }
+
 
     public function __toString(): ?string
     {
@@ -91,6 +115,18 @@ class Article
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(string $state): self
+    {
+        $this->state = $state;
 
         return $this;
     }
