@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Delete Article{% endblock %}
+
+{% block body %}
+    <h1>Delete Article</h1>
+    <p>Confirm delete article '{{ article }}'</p>
+
+    {{ include('article/_delete_form.html.twig') }}
+{% endblock %}

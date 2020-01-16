@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Delete Category{% endblock %}
+
+{% block body %}
+    <h1>Delete Category</h1>
+    <p>Confirm delete category '{{ category }}'</p>
+
+    {{ include('category/_delete_form.html.twig') }}
+{% endblock %}

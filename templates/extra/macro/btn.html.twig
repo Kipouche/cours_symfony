@@ -1,0 +1,22 @@
+{% macro simple(path, class, title, role, elm) %}
+    {% import _self as btn %}
+
+    {% set element = elm|default(null) %}
+    {% if(is_bool(role) and role == true) or (role is not null and is_granted(role, element)) %}
+        {{ btn.enable(path, class, title) }}
+    {% else %}
+        {{ btn.disable(class, title) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro enable(path, class, title) %}
+    <a href="{{- path -}}" class="btn btn-{{- class|default('danger') }}" role="button">
+        {{ title }}
+    </a>
+{% endmacro %}
+
+{% macro disable(class, title) %}
+    <a href="#" class="btn btn-secondary disabled" role="button" aria-disabled="true">
+        {{ title }}
+    </a>
+{% endmacro %}

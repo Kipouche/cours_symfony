@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% import 'extra/macro/btn.html.twig' as btn %}
+
+{% block title %}Article index{% endblock %}
+
+{% block body %}
+    <h1>Article index</h1>
+    {{ btn.simple(path('article_new'), 'primary', 'Add', 'ROLE_CREATE_ARTICLE')}}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for article in articles %}
+            <tr>
+                <td>{{ article.id }}</td>
+                <td>{{ article.title }}</td>
+                <td>{{ article.content|slice(0,50) }}</td>
+                <td>{{ article.author.email }}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        {{ btn.simple(path('article_show', {'id': article.id}), 'info', 'Show', 'ROLE_READ_ARTICLE', article)}}
+                        {{ btn.simple(path('article_edit', {'id': article.id}), 'success', 'Edit', 'ROLE_UPDATE_ARTICLE', article)}}
+                        {{ btn.simple(path('article_delete_confirm', {'id': article.id}), 'danger', 'Delete', 'ROLE_DELETE_ARTICLE', article)}}
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ btn.simple(path('article_new'), 'primary', 'Add', 'ROLE_CREATE_ARTICLE')}}
+{% endblock %}
