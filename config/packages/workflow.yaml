@@ -10,17 +10,15 @@ framework:
             supports:
                 - App\Entity\Article
             places:
-                - create
                 - review
                 - publish
-            initial_marking: create
+            initial_marking: review
             transitions:
-                submit:
-                    from: create
-                    to: review
                 published:
+                    guard: "is_fully_authenticated()"
                     from: review
                     to: publish
                 unpublished:
+                    guard: "is_fully_authenticated()"
                     from: publish
                     to: review

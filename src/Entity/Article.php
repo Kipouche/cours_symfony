@@ -57,7 +57,7 @@ class Article
 
     public function __construct()
     {
-        $this->state = "create";
+        $this->state = "review";
     }
 
 

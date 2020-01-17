@@ -11,12 +11,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Workflow\Registry;
 
 /**
  * @Route("/article")
  */
 class ArticleController extends AbstractController
 {
+    public function __construct(Registry $workflowRegistry)
+    {
+        $this->workflowRegistry = $workflowRegistry;
+    }
+
     /**
      * @IsGranted("ROLE_LIST_ARTICLE")
      * @Route("/", name="article_index", methods={"GET"})
@@ -108,5 +114,27 @@ class ArticleController extends AbstractController
         }
 
         return $this->redirectToRoute('article_index');
+    }
+
+    /**
+     * @IsGranted("ROLE_UNPUBLISH_ARTICLE", subject="article")
+     * @Route("/{id}/state/{transition}", name="article_state_change", methods={"GET"})
+     */
+    public function stateChange(Request $request, Article $article, String $transition)
+    {
+
+        if(is_null($request->headers->get('referer'))){
+            return $this->redirectToRoute('home');
+        }
+
+        $workflow = $this->workflowRegistry->get($article);
+        if($workflow->can($article, $transition)){
+            $workflow->apply($article, $transition);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($article);
+            $entityManager->flush();
+        }
+
+        return $this->redirect($request->headers->get('referer'));
     }
 }

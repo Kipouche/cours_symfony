@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import 'extra/macro/btn.html.twig' as btn %}
 
 {% block title %}Edit Article{% endblock %}
 
@@ -6,6 +7,10 @@
     <h1>Edit Article</h1>
 
     {{ include('article/_form.html.twig', {'button_label': 'Update'}) }}
+
+    {% for place in workflow_transitions(article) %}
+        {{ btn.simple( path("article_state_change", {"id":article.id, "transition":place.name}), "success", place.name, "ROLE_UNPUBLISH_ARTICLE", article) }}
+    {% endfor %}
 
     <a href="{{ path('article_index') }}">back to list</a>
 {% endblock %}
